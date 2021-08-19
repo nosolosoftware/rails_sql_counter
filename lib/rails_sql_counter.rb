@@ -34,6 +34,7 @@ module RailsSqlCounter
     Thread.current[:rails_sql_counter] = nil
 
     ActiveSupport::Notifications.unsubscribe(@@subscriber)
+    @@subscriber = nil
   end
 
   def self.counter
