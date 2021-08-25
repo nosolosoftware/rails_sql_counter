@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_sql_counter/version'
+require 'active_support'
 
 # Count sql queries
 module RailsSqlCounter
