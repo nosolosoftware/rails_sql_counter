@@ -29,12 +29,12 @@ Or install it yourself as:
 
 * **start**: starts to count sql queries
 * **end**: ends to count sql queries
-* **counter**: returns number of sql quieries from start
+* **counter**: returns number of sql queries from start
+* **profile**: syntax sugar to facilitate start/end
 
 ## Usage
 
 Test example:
-
 ```ruby
 context '...' do
   before { RailsSqlCounter.start }
@@ -45,6 +45,32 @@ context '...' do
 
     expect(RailsSqlCounter.counter).to eq(1)
   end
+end
+
+# You could also use .profile
+context '...' do
+  it 'returns results with only one query' do
+    RailsSqlCounter.profile { get path }
+
+    expect(RailsSqlCounter.counter).to eq(1)
+  end
+end
+```
+You may want to wrap the tests as:
+
+```ruby
+config.around(:each, :max_queries) do |example|
+  RailsSqlCounter.profile { example.run }
+
+  if RailsSqlCounter.counter > example.metadata[:max_queries]
+    raise 'Maximum number of queries overpassed.'
+  end
+end
+
+(...)
+
+it 'returns results with only one query', max_queries: 1 do
+  get path
 end
 ```
 
