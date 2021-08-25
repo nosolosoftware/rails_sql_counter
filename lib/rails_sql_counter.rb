@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_sql_counter/version'
+require 'active_support'
 
 # Count sql queries
 module RailsSqlCounter
@@ -30,9 +31,14 @@ module RailsSqlCounter
     end
   end
 
-  def self.end
-    Thread.current[:rails_sql_counter] = nil
+  def self.profile(&block)
+    start
+    block.call
+  ensure
+    self.end
+  end
 
+  def self.end
     ActiveSupport::Notifications.unsubscribe(@@subscriber)
     @@subscriber = nil
   end
@@ -50,5 +56,5 @@ module RailsSqlCounter
     end
   end
 
-  private_class_method :inc, :show_backtrace
+  private_class_method :inc, :show_backtrace, :process
 end
