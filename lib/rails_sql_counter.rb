@@ -31,6 +31,13 @@ module RailsSqlCounter
     end
   end
 
+  def self.profile(&block)
+    start
+    block.call
+  ensure
+    self.end
+  end
+
   def self.end
     ActiveSupport::Notifications.unsubscribe(@@subscriber)
     @@subscriber = nil
