@@ -50,5 +50,5 @@ module RailsSqlCounter
     end
   end
 
-  private_class_method :inc, :show_backtrace
+  private_class_method :inc, :show_backtrace, :process
 end
